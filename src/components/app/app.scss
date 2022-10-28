@@ -1,0 +1,23 @@
+.app {
+  width: 1100px;
+  margin: 0 auto;
+  padding: 50px 0 50px 0;
+  position: relative;
+  .bg-decoration {
+      position: absolute;
+      right: -174px;
+      bottom: -70px;
+      z-index: -1;
+  }
+}
+
+
+.char {
+  &__content {
+      margin-top: 50px;
+      display: grid;
+      grid-template-columns: 650px 425px;
+      column-gap: 25px;
+      align-items: start;
+  }
+}
