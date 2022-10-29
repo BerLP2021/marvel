@@ -41,7 +41,7 @@ class CharList extends Component {
     updateCharList = async () => {
         if(this.state.characters.length === 0) {
             await this.marvelService
-                .getSomeCharacters(9)
+                .getAllCharacters()
                 .then(this.onListLoaded)
                 .catch(this.onError);
              
@@ -55,7 +55,7 @@ class CharList extends Component {
 
     componentDidMount() {
         this.updateCharList();
-
+        // this.fdgd.dfgd = 343;
     }
    
     view = (characters) => {
@@ -64,7 +64,7 @@ class CharList extends Component {
             return (
                 <li className="char__item" key={character.idForKey} 
                     data-charid={character.id} 
-                    onClick={(e) => {console.log(e.currentTarget.getAttribute('data-charid')); this.props.onCharSelected(e.currentTarget.getAttribute('data-charid'))}}
+                    onClick={(e) => {this.props.onCharSelected(e.currentTarget.getAttribute('data-charid'))}}
                 >
                     <img src={character.thumbnail} 
                         alt="abyss"

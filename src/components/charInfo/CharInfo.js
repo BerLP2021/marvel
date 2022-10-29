@@ -48,6 +48,7 @@ class CharInfo extends React.Component {
 
     componentDidMount() {
         this.onUpdate(this.props.selectedChar);
+        // this.fdgd.dfgd = 343;
     }
 
     componentDidUpdate(prevProps) {

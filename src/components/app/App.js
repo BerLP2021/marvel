@@ -8,6 +8,7 @@ import Skeleton from "../skeleton/Skeleton";
 import AppBanner from "../appBanner/AppBanner";
 import ComicsList from "../comicsList/ComicsList";
 import SingleComics from "../singleComics/SingleComics";
+import ErrorBoundary from '../errorBoundary/ErrorBoundary'
 
 import vision from "../../resources/img/vision.png";
 import "./app.scss";
@@ -29,13 +30,20 @@ class App extends Component {
       <div className="app">
         <AppHeader />
         <main>
-          <RandomChar />
+          <ErrorBoundary>
+            <RandomChar />
+          </ErrorBoundary>
           {/* <AppBanner/> */}
           <div className="char__content">
-            <CharList onCharSelected={this.onCharSelected}/>
-            {/* <Skeleton/> */}
-            {/* <CharInfo selectedChar={this.state.selectedChar}/> */}
-            {this.state.selectedChar !==  null ? <CharInfo selectedChar={this.state.selectedChar}/> : <Skeleton/>}
+            <ErrorBoundary>
+              <CharList onCharSelected={this.onCharSelected}/>
+            </ErrorBoundary>
+            {
+              this.state.selectedChar !==  null 
+                ? <ErrorBoundary>
+                    <CharInfo selectedChar={this.state.selectedChar}/>
+                  </ErrorBoundary> 
+                : <Skeleton/>}
           </div>
           {/* <ComicsList/> */}
           {/* <SingleComics/>  */}
