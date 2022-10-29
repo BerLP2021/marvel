@@ -56,6 +56,7 @@ class RandomChar extends Component {
     componentDidMount() {
         // console.log('Hi from componentDidMount');
         this.updateChar();
+        // this.timer = setInterval(this.updateChar, 15000);
 
     }
     
@@ -65,6 +66,7 @@ class RandomChar extends Component {
     
     componentWillUnmount() {
         // console.log('Hi from componentWillUnmount');
+        clearInterval(this.timer);
     }
 
     render() {
@@ -116,7 +118,7 @@ const View = ({char}) => {
                 className="randomchar__img"
             />
             <div className="randomchar__info">
-                <p className="randomchar__name">{name}</p>
+                <p className="randomchar__name">{name.length > 19 ? name.slice(0, 19) + '...' : name}</p>
                 <p className="randomchar__descr">
                     {description}
                 </p>

@@ -64,13 +64,8 @@ class CharList extends Component {
             return (
                 <li className="char__item" key={character.idForKey} 
                     data-charid={character.id} 
-                    onClick={(e) => {
-                        // console.log(e.currentTarget.getAttribute('data-charid')); 
-                        this.props.onCharSelected(
-                            e.currentTarget.getAttribute('data-charid'), 
-                            character);
-                    }}
-                    >
+                    onClick={(e) => {console.log(e.currentTarget.getAttribute('data-charid')); this.props.onCharSelected(e.currentTarget.getAttribute('data-charid'))}}
+                >
                     <img src={character.thumbnail} 
                         alt="abyss"
                         style={ 

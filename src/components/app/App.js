@@ -1,4 +1,5 @@
-import "./app.scss";
+import { Component } from "react";
+
 import AppHeader from "../appHeader/AppHeader";
 import RandomChar from "../randomChar/RandomChar";
 import CharList from "../charList/CharList";
@@ -9,18 +10,17 @@ import ComicsList from "../comicsList/ComicsList";
 import SingleComics from "../singleComics/SingleComics";
 
 import vision from "../../resources/img/vision.png";
-import { Component } from "react";
+import "./app.scss";
 
 class App extends Component {
+
   state = {
     selectedChar: null,
-    character: {}
   };
 
   onCharSelected = (id, char) => {
     this.setState({
       selectedChar: id, 
-      character: char
     })
   }
 
@@ -29,12 +29,13 @@ class App extends Component {
       <div className="app">
         <AppHeader />
         <main>
-        <RandomChar />
+          <RandomChar />
           {/* <AppBanner/> */}
           <div className="char__content">
             <CharList onCharSelected={this.onCharSelected}/>
-            {/* <CharInfo {...this.state}/> */}
-            {this.state.selectedChar ===  null ? <Skeleton/> : <CharInfo {...this.state}/>}
+            {/* <Skeleton/> */}
+            {/* <CharInfo selectedChar={this.state.selectedChar}/> */}
+            {this.state.selectedChar !==  null ? <CharInfo selectedChar={this.state.selectedChar}/> : <Skeleton/>}
           </div>
           {/* <ComicsList/> */}
           {/* <SingleComics/>  */}
