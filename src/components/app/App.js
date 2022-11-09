@@ -12,6 +12,7 @@ import ErrorBoundary from '../errorBoundary/ErrorBoundary'
 
 import vision from "../../resources/img/vision.png";
 import "./app.scss";
+import ArrowUp from "../arrowUp/ArrowUp";
 
 class App extends Component {
 
@@ -48,6 +49,7 @@ class App extends Component {
           {/* <ComicsList/> */}
           {/* <SingleComics/>  */}
           <img className="bg-decoration" src={vision} alt="vision" />
+          <ArrowUp/>
         </main>
       </div>
     );

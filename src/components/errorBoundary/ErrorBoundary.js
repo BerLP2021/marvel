@@ -20,6 +20,7 @@ export default class ErrorBoundary extends Component {
     render() {
         if(this.state.error) {
             return <ErrorMessage/>
-        } else return this.props.children;
+        } else 
+            return this.props.children;
     }
 }

@@ -1,6 +1,7 @@
- 
+import PropTypes from 'prop-types';
+import React from 'react';
 
-class MarvelService {
+class MarvelService extends React.Component {
     _apiBase = 'https://gateway.marvel.com:443/v1/public/';
     _apiKey = 'apikey=5e71aeefead0f81920c8d6dc52f22ff5';
     _offset = 210;
@@ -49,17 +50,12 @@ class MarvelService {
             comics: char.comics.items,
         }
     }
-
-
-
-
-//     _transformCharList = (list) => {
-//         return list.map(item => ({ 
-//             name: item.name,
-//             thumbnail: item.thumbnail.path + '.' + item.thumbnail.extension
-//         }))
-//     }
 }
 
+// MarvelService.defaultProps = {
+//     _apiBase: 'https://gateway.marvel.com:443/v1/public/',
+//     _apiKey: 'apikey=5e71aeefead0f81920c8d6dc52f22ff5',
+//     _offset: 210
+// }
 
 export default MarvelService; 
