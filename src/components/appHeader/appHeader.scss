@@ -4,6 +4,11 @@
     &__header {
         display: flex;
         justify-content: space-between;
+        position: sticky;
+        top: 0px;
+        padding: 25px 0;
+        z-index: 6;
+        background-color: #fff;
     }
     &__title {
         font-weight: bold;
@@ -28,4 +33,5 @@
             }
         }
     }
+    
 }

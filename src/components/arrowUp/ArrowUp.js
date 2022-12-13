@@ -1,50 +1,34 @@
-import {Component} from 'react';
+import {Component, useState, useEffect} from 'react';
 
 import "./arrowUp.scss";
 import arrow from "../../resources/img/arrow.png"
 
-class ArrowUp extends Component {
-    state ={
-        show: false
-    }    
-    
-    onArrowUp = (e) => {
-        if(document.documentElement.scrollTop > 1000) {
-            this.setState(() => ({
-                show: true
-            }))
-        } else {
-            this.setState(() => ({
-                show: false
-            }))
-        }
+const ArrowUp = () => {
+    const [show, setShow] = useState(false);
+
+    const onArrowUp = (e) => {
+        document.documentElement.scrollTop > 1000 ? setShow(true) : setShow(false);
         // console.log(document.documentElement.scrollTop);
     }
    
-    goUpstairs = () => {
+    const goUpstairs = () => {
         window.scrollTo({
             top: 100,
             behavior: 'smooth'
           });
     }
+    useEffect(() => {
+        window.addEventListener('scroll', onArrowUp);
+        return () => {
+            window.removeEventListener('scroll', onArrowUp);
+        }
+    }, []);
 
-    componentDidMount() {
-        window.addEventListener('scroll', this.onArrowUp);
-    }
-
-
-    componentWillUnmount() {
-        window.removeEventListener('scroll', this.onArrowUp);
-
-    }
-
-    render() {
-        return (
-            <div className= {`arrowUp__wrap ${this.state.show ? 'visible' : ""}`} onClick={this.goUpstairs}>
-                <img src={arrow} alt="Click to go upstairs" />
-            </div>
-        )
-    }
+    return (
+        <div className= {`arrowUp__wrap ${show ? 'visible' : ""}`} onClick={goUpstairs}>
+            <img src={arrow} alt="Click to go upstairs" />
+        </div>
+    )
         
 }
 

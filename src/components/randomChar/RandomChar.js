@@ -1,107 +1,59 @@
-import {Component} from 'react';
+import {useState, useEffect} from 'react';
 
-import MarvelService from '../../services/MarvelService';
+import useMarvelService from '../../services/MarvelService';
 import Spinner from '../spinner/Spinner';
 import ErrorMessage from '../error/ErrorMessage';
 
 import './randomChar.scss';
 import mjolnir from '../../resources/img/mjolnir.png';
 
-class RandomChar extends Component {
-    constructor(props) {
-        super(props);
-        // console.log('Hi from constructor');
+const RandomChar = () => {
+   
+    const [char, setChar] = useState(null);
+    const {loading, error, clearError, getCharacter} = useMarvelService();
 
-        // setInterval(this.updateChar, 3000);
-    }
-
-    state = {
-        char: {},
-        loading: true,
-        error: false
-    }
-
-    marvelService = new MarvelService();
-
-    onCharLoaded = (char) => {
-        // console.log('Hi from updateChar + onCharLoaded');
-        this.setState({
-            char, //char: char
-            error: false,
-            loading: false
-        });
-    }
-
-    onCharLoading = () => {
-        this.setState((state) => ({
-            loading: true
-        }))
-    }
-
-    updateChar = () => {
+    const updateChar = () => {
+        clearError();
         let id = Math.floor(1011000 + Math.random() * (1011400-1011000+1));
-        this.marvelService
-            .getCharacter(id)
-            .then(this.onCharLoaded)
-            .catch(this.onError);
-    }
-
-    onError = () => {
-        this.setState({
-            error: true, 
-            loading: false
-        }) 
-    }
-    
-    componentDidMount() {
-        // console.log('Hi from componentDidMount');
-        this.updateChar();
-        // this.timer = setInterval(this.updateChar, 15000);
+        getCharacter(id)
+            .then(res => setChar(res));
 
     }
+   
+    useEffect(() => {
+        updateChar();
+    }, []);
     
-    componentDidUpdate() {
-        // console.log('Hi from componentDidUpdate');
-    }
+    // console.log('Hi from render');
+    // const errorMessage = error ? <ErrorMessage/> : null;
+    // const spinner = loading ? <Spinner/> : null;
+    // const content = !(loading || error || !char) ? <View char={char} /> : null;
+    return (
+        <div className="randomchar">
+            {loading ? <Spinner/> 
+                     : error  ? <ErrorMessage/> 
+                              : char 
+                              ? <View char={char}/> : null
+            }
+            {/* {spinner}
+            {errorMessage}
+            {content} */}
+            <div className="randomchar__static">
+                <p className="randomchar__title">
+                    Random character for today!<br/>
+                    Do you want to get to know him better?
+                </p>
+                <p className="randomchar__title">
+                    Or choose another one
+                </p>
     
-    componentWillUnmount() {
-        // console.log('Hi from componentWillUnmount');
-        clearInterval(this.timer);
-    }
-
-    render() {
-        // console.log('Hi from render');
-        const {char, error, loading} = this.state; 
-        // const errorMessage = error ? <ErrorMessage/> : null;
-        // const spinner = loading ? <Spinner/> : null;
-        // const content = !(loading || error) ? <View char={char} /> : null;
-        return (
-            <div className="randomchar">
-                {loading ? <Spinner/> : (error ? <ErrorMessage/> : <View char={char}/>)}
-                {/* {spinner}
-                {errorMessage}
-                {content} */}
-                <div className="randomchar__static">
-                    <p className="randomchar__title">
-                        Random character for today!<br/>
-                        Do you want to get to know him better?
-                    </p>
-                    <p className="randomchar__title">
-                        Or choose another one
-                    </p>
-        
-                    <button className="button button__main" 
-                        onClick={() => {
-                            this.onCharLoading();
-                            this.updateChar()
-                        }}>
-                        <div className="inner">try it</div>
-                    </button>
-                    <img src={mjolnir} alt="mjolnir" className="randomchar__decoration"/>
-                </div>
+                <button className="button button__main" onClick={() => updateChar()}>
+                    <div className="inner">try it</div>
+                </button>
+                <img src={mjolnir} alt="mjolnir" className="randomchar__decoration"/>
             </div>
-        )
-    }
+        </div>
+    )
 }
 
 const View = ({char}) => {

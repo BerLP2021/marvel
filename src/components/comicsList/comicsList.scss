@@ -16,23 +16,33 @@
             box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.25);
             width: 225px;
             height: 345px;
-            object-fit: cover;
+            object-fit: fit;
         }
         &-name {
             margin-top: 10px;
+            padding-left: 10px;
             font-weight: bold;
             font-size: 14px;
             line-height: 18px;
         }
         &-price {
             margin-top: 5px;
+            padding: 0 0 10px 10px;
             font-weight: bold;
             font-size: 14px;
             line-height: 18px;
             color: rgba(0, 0, 0, 0.6);
         }
+        &_focused {
+            box-shadow: 0 5px 20px rgb(7, 59, 233);
+            transform: translateY(-8px);
+        }
+        &:focus-visible {
+            outline: none;
+        }
         &:hover {
-            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgb(7, 59, 233);
+            transform: translateY(-8px);
         }
     }
 }
