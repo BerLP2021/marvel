@@ -11,7 +11,6 @@
   }
 }
 
-
 .char {
   &__content {
       margin-top: 50px;
@@ -19,5 +18,9 @@
       grid-template-columns: 650px 425px;
       column-gap: 25px;
       align-items: start;
+  }
+  &__sidebar {
+    position: sticky;
+    top: 96px;
   }
 }

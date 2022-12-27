@@ -4,7 +4,6 @@ import ErrorMessage from '../error/ErrorMessage';
 const Page404 = () => {
     const navigate = useNavigate();
     
-
     return (
         <div>
             <ErrorMessage/>

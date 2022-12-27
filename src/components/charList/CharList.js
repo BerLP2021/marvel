@@ -5,57 +5,42 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import useMarvelService from '../../services/MarvelService';
 import Spinner from '../spinner/Spinner';
 import ErrorMessage from '../error/ErrorMessage';
-import { useId } from "react-id-generator";
 
 import './charList.scss';
 
 const CharList = (props) => {
   
-    
-    // state = JSON.parse(localStorage.getItem('charList'))?.characters.length > 0 
-    //     ? {...JSON.parse(localStorage.getItem('charList')), 
-    //         characters: JSON.parse(localStorage.getItem('charList')).characters.map(item => ({
-    //             ...item, idForKey: nextId()
-    //         }))} 
-    //     : {
-    //         characters: [],
-    //         loading: true,
-    //         error: false,
-    //         offset: 210,
-    //         btnLoadMoreBlocked: false,
-    //         endOfCharList: false
-    //     }
-    const a = JSON.parse(localStorage.getItem('charList'))?.characters.length;
-    const local = JSON.parse(localStorage.getItem('charList'));
-    const [characters, setCharacters] = useState(a > 0 ? local.characters : []);
-    const [offset, setOffset] = useState(a > 0 ? local.offset : 210);
-    const [endOfCharList, setEndOfCharList] = useState(a > 0 ? local.endOfCharList : false);
-    const [btnLoadMoreBlocked, setBtnLoadMoreBlocked] = useState(a > 0 ? local.btnLoadMoreBlocked : false);
-    // const [loading, setLoading] = useState(a > 0 ? local.loading : true);
-    // const [error, setError] = useState(a > 0 ? local.error : false);
+    const [characters, setCharacters] = useState( []);
+    const [btnLoadMoreBlocked, setBtnLoadMoreBlocked] = useState(false);
+    const [offset, setOffset] = useState(210);
+    const [endOfCharList, setEndOfCharList] = useState(false);
 
+    const [newItemLoading, setnewItemLoading] = useState(false);
+
+    
     const {loading, error, getAllCharacters, clearError} = useMarvelService();
 
+    useEffect(()=> {
+        // onLoadMore(offset);
+        onLoadMore(offset, true);
+
+    }, [])
+
+    const onLoadMore = (offset, initial) => {
+            clearError();
+            // setBtnLoadMoreBlocked(true);
+            initial ? setnewItemLoading(false) : setnewItemLoading(true)
+            getAllCharacters(offset)
+                .then(onListLoaded);
+        }
+
     const onListLoaded = (res) => {
-        // setBtnLoadMoreBlocked(true);
         setCharacters(characters => [...characters, ...res]);
-                
         setOffset(offset => offset + res.length);
-        setBtnLoadMoreBlocked(() => false);
+        // setBtnLoadMoreBlocked(() => false);
+        setnewItemLoading(false);
         setEndOfCharList(() => res.length < 9);
     }
-
-    const onLoadMore = (offset) => {
-        clearError();
-        setBtnLoadMoreBlocked(true);
-        getAllCharacters(offset)
-            .then(onListLoaded);
-    }
-
-    useEffect(()=> {
-        if(!localStorage.getItem('charList')) 
-        onLoadMore(offset);
-    }, [])
 
     useEffect(() => {
         let timer;
@@ -74,26 +59,6 @@ const CharList = (props) => {
         if(endOfCharList)
             return () => {window.removeEventListener("scroll", onScroll);}
     }, [endOfCharList]);
-
-    useEffect(() => {
-        localStorage.setItem(
-            'charList', 
-            JSON.stringify({
-                characters: characters,
-                offset: offset,
-                endOfCharList: endOfCharList,
-                btnLoadMoreBlocked: btnLoadMoreBlocked
-            })
-        );
-    });
-
-    useEffect(() => {
-        const clearLocalStorage = setInterval(() => localStorage.clear('charList'), 60000);
-        
-        return () => {
-            clearTimeout(clearLocalStorage);
-        }
-    }, [])
 
     const onScroll = () => {
         if (window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight) {
@@ -124,80 +89,72 @@ const CharList = (props) => {
         myRefs.current[id].classList.remove('char__item_hovered')
 
     }   
-    const idForKey = useId(characters.length);
 
 
-    const view = (characters) => {
+    function view(characters) {
         const elements = characters.map((character, i) => {
-                return (  
-                    <TransitionGroup>
-                        <CSSTransition
-                            timeout={200} 
-                            key={idForKey[i]}
-                            classNames="char__item">
-                            <>
-                            <li ref={el => myRefs.current[i] = el}  //Попробывать разные варианты
-                                tabIndex={0}
-                                className="char__item" 
-                                // data-charid={character.id}
-                                onFocus={() => onCharFocus(i)}
-                                onBlur={() => onCharBlur(i)}
-                                onKeyPress={e => {
-                                        e.preventDefault();
-                                        if(e.key === ' ' || e.key === 'Enter') {
-                                            props.onCharSelected(character.id);
-                                            onCharClick(i);
-                                        }
-                                    }
-                                }
-                                onMouseEnter={() => onCharFocus(i)} 
-                                onMouseLeave={() => onCharBlur(i)}
-                                onClick={e => {
+            return (  
+                <CSSTransition timeout={500} key={character.id} classNames="char__item">
+                    <li ref={el => myRefs.current[i] = el}  //Попробывать разные варианты
+                        tabIndex={0}
+                        className="char__item" 
+                        onClick={e => {
+                            props.onCharSelected(character.id);
+                            onCharClick(i);
+                        }}
+                        onFocus={() => onCharFocus(i)}
+                        onBlur={() => onCharBlur(i)}
+                        onKeyDown={e => {
+                                e.preventDefault();
+                                if(e.key === ' ' || e.key === 'Enter') {
                                     props.onCharSelected(character.id);
                                     onCharClick(i);
-                                }}
-                            >
-                                <img src={character.thumbnail} 
-                                    alt="abyss"
-                                    style={ 
-                                        character.thumbnail.indexOf('image_not_available.jpg') !== -1 || character.thumbnail.indexOf('4c002e0305708.gif') !== -1 
-                                        ? {objectFit: "fill"} 
-                                        : null
-                                    }/>
-                                <div className="char__name">{character.name}</div>
-                            </li>
-                            </>
-                        </CSSTransition>
-                    </TransitionGroup> 
+                                }
+                            }
+                        }
+                        onMouseEnter={() => onCharFocus(i)} 
+                        onMouseLeave={() => onCharBlur(i)}
                         
-                        
-                )
-            });
+                    >
+                        <img src={character.thumbnail} 
+                            alt="abyss"
+                            style={ 
+                                character.thumbnail.indexOf('image_not_available.jpg') !== -1 || character.thumbnail.indexOf('4c002e0305708.gif') !== -1 
+                                ? {objectFit: "fill"} 
+                                : null
+                            }/>
+                        <div className="char__name">{character.name}</div>
+                    </li>
+                </CSSTransition>
+            )}
+        );
         return (
             <ul className="char__grid">
-                
-                {elements}
-
+                <TransitionGroup component={null} >
+                    {elements}
+                </TransitionGroup>
             </ul>
+            
         )
     }
+    
+    const items = view(characters);
 
-        // console.log(this.state.characters); 
-        
-        return (
-            <div className="char__list">                
-                {/* <button className="button button__main button__long"
-                        onClick={() => console.log(this.myRefs)}></button> */}
-                {loading && characters.length == 0 ? <Spinner/> : (error ? <ErrorMessage/> : view(characters))}
-                
-                <button className="button button__main button__long"
-                        onClick={() => onLoadMore(offset)}
-                        disabled={btnLoadMoreBlocked} 
-                        style={{"display": endOfCharList ? "none" : "block"}}>
-                    <div className="inner">load more</div>
-                </button>
-            </div>
-        )
+    return (
+        <div className="char__list">                
+            {loading && characters.length == 0 ? <Spinner/> : error ? <ErrorMessage/> : null}
+            {items}
+            {/* {loading && !newItemLoading ? <Spinner/> : (error ? <ErrorMessage/> : <>{items}</>)} */}
+            
+            <button className="button button__main button__long"
+                    onClick={() => onLoadMore(offset)}
+                    // disabled={btnLoadMoreBlocked} 
+                    disabled={newItemLoading} 
+                    style={{"display": endOfCharList ? "none" : "block"}}>
+                <div className="inner">load more</div>
+            </button>
+        </div>
+    )
     
 }
 

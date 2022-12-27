@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
+import { TransitionGroup, CSSTransition } from 'react-transition-group';
 
 import useMarvelService from '../../services/MarvelService';
 import Spinner from '../spinner/Spinner';
@@ -47,37 +48,49 @@ const ComicsList = () => {
         comicsRef.current[id].classList.remove('comics__item_focused')
     } 
 
-    const view = (comics) => {
+    function view(comics) {
         const items = comics.map((item, i) => {
-            const {id, url, urlSrc, title, price} = item;
+            const {id, url, thumbnail, name, price} = item;
             return (
-                <li 
-                    className="comics__item" 
+                <CSSTransition
                     key={i}
-                    ref={el => comicsRef.current[i] = el}
-                    tabIndex={0}
-                    onFocus={() => onComicsFocus(i)}
-                    onBlur={() => onComicsBlur(i)}
-                    
-                    >
-                    <Link to={`/comics/${item.id}`} tabIndex={-1}>
-                        <img src={urlSrc} alt={title} className="comics__item-img"/>
-                        <div className="comics__item-name">{title}</div>
-                        <div className="comics__item-price">{price}</div>
-                    </Link>
-                </li>
+                    classNames="comics__item"
+                    timeout={700}>
+                    <>
+                        <li 
+                            className="comics__item" 
+                            ref={el => comicsRef.current[i] = el}
+                            tabIndex={0}
+                            onFocus={() => onComicsFocus(i)}
+                            onBlur={() => onComicsBlur(i)}
+                        >
+                            <Link to={`/comics/${id}`} tabIndex={-1}>
+                                <img src={thumbnail} alt={name} className="comics__item-img"/>
+                                <div className="comics__item-name">{name}</div>
+                                <div className="comics__item-price">{price}</div>
+                            </Link>
+                        </li>
+                    </>
+                </CSSTransition>
             )
         })
         return (
             <ul className="comics__grid">
-                {items}
+                <TransitionGroup component={null}>
+                    {items}
+                </TransitionGroup>
             </ul>
         );
     }
 
+    const comicItems = view(comics);
+
     return (
         <div className="comics__list">
-                {loading && !btnLoadMoreBlocked ? <Spinner/> : (error ? <ErrorMessage/> : view(comics))}
+            {loading && !btnLoadMoreBlocked 
+                ? <Spinner/> 
+                : error ? <ErrorMessage/> : null}
+            {comicItems}      
             <button className="button button__main button__long"
                     onClick={() => 
                         updateComics(offset)}

@@ -1,4 +1,5 @@
 import {useState, useEffect} from 'react';
+import { CSSTransition } from 'react-transition-group';
 
 import useMarvelService from '../../services/MarvelService';
 import Spinner from '../spinner/Spinner';
@@ -11,12 +12,16 @@ const RandomChar = () => {
    
     const [char, setChar] = useState(null);
     const {loading, error, clearError, getCharacter} = useMarvelService();
+    const [inProp, setInProp] = useState(false);
 
     const updateChar = () => {
         clearError();
+        setInProp(false);
         let id = Math.floor(1011000 + Math.random() * (1011400-1011000+1));
         getCharacter(id)
-            .then(res => setChar(res));
+            .then(res => {
+                    setChar(res)
+                    setInProp(true)});
 
     }
    
@@ -24,20 +29,22 @@ const RandomChar = () => {
         updateChar();
     }, []);
     
-    // console.log('Hi from render');
-    // const errorMessage = error ? <ErrorMessage/> : null;
-    // const spinner = loading ? <Spinner/> : null;
-    // const content = !(loading || error || !char) ? <View char={char} /> : null;
+    const errorMessage = error ? <ErrorMessage/> : null;
+    const spinner = loading ? <Spinner/> : null;
+    const content = !(loading || error || !char) ? <View char={char} /> : null;
+
     return (
         <div className="randomchar">
-            {loading ? <Spinner/> 
-                     : error  ? <ErrorMessage/> 
-                              : char 
-                              ? <View char={char}/> : null
-            }
-            {/* {spinner}
+       
+            {spinner}
             {errorMessage}
-            {content} */}
+            <CSSTransition
+                in={inProp}
+                timeout={500}
+                classNames='randomchar__block'>
+            <>{content}</> 
+            </CSSTransition>
+            
             <div className="randomchar__static">
                 <p className="randomchar__title">
                     Random character for today!<br/>

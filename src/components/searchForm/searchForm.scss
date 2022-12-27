@@ -1,0 +1,39 @@
+@import '../../style/variables.scss';
+
+.char__search {
+    padding: 25px;
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.25);
+    background-color: #fff;
+    &-title {
+        font-weight: 700;
+        font-size: 18px;
+    }
+    &-wrapper {
+       display: flex;
+       justify-content: space-between; 
+       margin-top: 15px;
+       align-items: baseline;
+        input {
+            width: 250px;
+            padding: 0 10px;
+            height: 38px;
+            box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+            font-size: 14px;
+            border: none;
+        }
+    }
+    .error {
+        margin-top: 15px;
+        font-size: 18px;
+        font-weight: 700;
+        color: $main-color;
+    }
+    &-success {
+        font-weight: 700;
+        font-size: 18px;
+        margin-top: 18px;
+        color: #03710E;
+    }
+  
+}
+
