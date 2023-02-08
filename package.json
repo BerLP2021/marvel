@@ -2,7 +2,7 @@
   "name": "148",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://BerLP2021.github.io",
+  "homepage": "https://BerLP2021.github.io/marvel",
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
@@ -21,6 +21,7 @@
     "yup": "^0.32.11"
   },
   "scripts": {
+    "predeploy": "npm run build",
     "deploy": "gh-pages -b master -d build",
     "start": "react-scripts start",
     "build": "react-scripts build",

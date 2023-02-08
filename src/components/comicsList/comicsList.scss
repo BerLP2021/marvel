@@ -1,7 +1,6 @@
 @import "../../style/variables.scss";
 
 .comics {
-    
     &__list {
         margin-top: 45px;
     }
@@ -12,7 +11,7 @@
         row-gap: 55px;
     }
     &__item {
-        transition: 0.3s transform;
+        transition: transform 0.3s ;
         &-enter {
             opacity: 0;
         }

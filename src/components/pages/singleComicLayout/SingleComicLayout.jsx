@@ -3,10 +3,10 @@ import {Helmet} from "react-helmet";
 
 import './singleComicLayout.scss';
 
-const SingleComicPage = ({value}) => {
+const SingleComicPage = ({data}) => {
     const navigate = useNavigate();
 
-    const {thumbnail, name, description, price, pageCount, language} = value;
+    const {thumbnail, name, description, price, pageCount, language} = data;
     // console.log(comic);
     return (
         <>

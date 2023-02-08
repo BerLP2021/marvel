@@ -5,9 +5,7 @@ import {Helmet} from "react-helmet";
 import RandomChar from "../randomChar/RandomChar";
 import CharList from "../charList/CharList";
 import CharInfo from "../charInfo/CharInfo";
-import Skeleton from "../skeleton/Skeleton";
 import ErrorBoundary from '../errorBoundary/ErrorBoundary'
-import AnimateAppearing from '../animateApearing/AnimateAppearing';
 import { SearchForm } from '../searchForm/SearchForm';
 
 const MainPage = () => {

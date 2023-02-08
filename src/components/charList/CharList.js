@@ -1,70 +1,76 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useMemo} from 'react';
 import PropTypes from 'prop-types';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
 import useMarvelService from '../../services/MarvelService';
-import Spinner from '../spinner/Spinner';
-import ErrorMessage from '../error/ErrorMessage';
 
+import setContentList from '../../utils/getContentList';
 import './charList.scss';
+
+
 
 const CharList = (props) => {
   
     const [characters, setCharacters] = useState( []);
-    const [btnLoadMoreBlocked, setBtnLoadMoreBlocked] = useState(false);
     const [offset, setOffset] = useState(210);
     const [endOfCharList, setEndOfCharList] = useState(false);
 
     const [newItemLoading, setnewItemLoading] = useState(false);
 
-    
-    const {loading, error, getAllCharacters, clearError} = useMarvelService();
+    const {process, setProcess, getAllCharacters, clearError} = useMarvelService();
 
     useEffect(()=> {
         // onLoadMore(offset);
         onLoadMore(offset, true);
-
+    // eslint-disable-next-line
     }, [])
 
     const onLoadMore = (offset, initial) => {
             clearError();
-            // setBtnLoadMoreBlocked(true);
             initial ? setnewItemLoading(false) : setnewItemLoading(true)
             getAllCharacters(offset)
-                .then(onListLoaded);
+                .then(onListLoaded)
+                .then(() => setProcess('confirmed'));
         }
 
     const onListLoaded = (res) => {
         setCharacters(characters => [...characters, ...res]);
         setOffset(offset => offset + res.length);
-        // setBtnLoadMoreBlocked(() => false);
         setnewItemLoading(false);
         setEndOfCharList(() => res.length < 9);
     }
 
     useEffect(() => {
-        let timer;
-       
+   
         if(!endOfCharList) {
-            timer = setTimeout(() => window.addEventListener("scroll", onScroll), 1000);
+            window.addEventListener("scroll", onScroll);
         }
        
         return () => {
-            clearTimeout(timer);
+           
             window.removeEventListener("scroll", onScroll);
-        };
+        }
+        // eslint-disable-next-line
     }, [offset]);
-
-    useEffect(() => {
-        if(endOfCharList)
-            return () => {window.removeEventListener("scroll", onScroll);}
-    }, [endOfCharList]);
-
+    
     const onScroll = () => {
         if (window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight) {
             onLoadMore(offset);
         }
     }
+
+    useEffect(() => {
+        if(endOfCharList)
+            return () => {window.removeEventListener("scroll", onScroll);}
+        // eslint-disable-next-line
+    }, [endOfCharList]);
+
+
+    // const onScroll = () => {
+    //     if (window.pageYOffset + window.innerHeight >= document.body.offsetHeight  && window.pageYOffset > 0) {
+    //         onLoadMore(offset);
+    //     }
+    // }
 
     let myRefs = useRef([]);
     
@@ -76,7 +82,6 @@ const CharList = (props) => {
     const onCharFocus = (id) => {
         if(!myRefs.current[id].classList.contains('char__item_hovered')) 
         myRefs.current[id].classList.add('char__item_hovered');
-        // console.log(e.currentTarget);
     }
     
     const onCharClick = (id) => { 
@@ -91,11 +96,12 @@ const CharList = (props) => {
     }   
 
 
-    function view(characters) {
+    const view = (characters) =>  {
+
         const elements = characters.map((character, i) => {
             return (  
                 <CSSTransition timeout={500} key={character.id} classNames="char__item">
-                    <li ref={el => myRefs.current[i] = el}  //Попробывать разные варианты
+                    <li ref={el => myRefs.current[i] = el}
                         tabIndex={0}
                         className="char__item" 
                         onClick={e => {
@@ -129,28 +135,28 @@ const CharList = (props) => {
             )}
         );
         return (
-            <ul className="char__grid">
-                <TransitionGroup component={null} >
-                    {elements}
-                </TransitionGroup>
-            </ul>
+            <TransitionGroup  className="char__grid" component={'ul'} >
+                {elements}
+            </TransitionGroup>
             
         )
     }
     
-    const items = view(characters);
-
+    const content = useMemo(() => {
+        return setContentList(process, () => view(characters), newItemLoading)
+        // eslint-disable-next-line
+    }, [process]);
+    
     return (
         <div className="char__list">                
-            {loading && characters.length == 0 ? <Spinner/> : error ? <ErrorMessage/> : null}
-            {items}
-            {/* {loading && !newItemLoading ? <Spinner/> : (error ? <ErrorMessage/> : <>{items}</>)} */}
             
+            {content}
+
             <button className="button button__main button__long"
                     onClick={() => onLoadMore(offset)}
                     // disabled={btnLoadMoreBlocked} 
                     disabled={newItemLoading} 
-                    style={{"display": endOfCharList ? "none" : "block"}}>
+                    style={{"display": endOfCharList || (process === 'loading' && !newItemLoading) ? "none" : "block"}}>
                 <div className="inner">load more</div>
             </button>
         </div>

@@ -4,10 +4,8 @@ import {useState, useEffect, lazy} from 'react';
 import { CSSTransition } from 'react-transition-group';
 
 import useMarvelService from '../../services/MarvelService';
-import Spinner from '../spinner/Spinner';
 import AppBanner from '../appBanner/AppBanner';
-
-const Page404 = lazy(() => import('../pages/Page404'));
+import getContent from '../../utils/getContent';
 
 const SingleCustomPage = ({Component}) => {
 
@@ -18,12 +16,16 @@ const SingleCustomPage = ({Component}) => {
 
     const [value, setValue] = useState(null);
     const [inProp, setInProp] = useState(false);
-    const {loading, error, getComic, getCharacter, clearError} = useMarvelService();
+    const {process, setProcess, getComic, getCharacter, clearError} = useMarvelService();
    
     const onDataUpdate = (id) => {
         clearError();
-        if(path == 'characters') getCharacter(id).then(onDataLoaded);
-            else if(path == 'comics') getComic(id).then(onDataLoaded);
+        if(path == 'characters') getCharacter(id)
+                                    .then(onDataLoaded)
+                                    .then(() => setProcess('confirmed'));
+        else if(path == 'comics') getComic(id)
+                                    .then(onDataLoaded)
+                                    .then(() => setProcess('confirmed'));
     };
 
     const onDataLoaded = (res) => {
@@ -36,23 +38,16 @@ const SingleCustomPage = ({Component}) => {
         onDataUpdate(id);
     }, [id]);
 
-    const spinner = loading ? <Spinner/> : null;
-    const errorMsg = error ? <Page404/> : null;
-    const content = !(loading || error || !value) 
-                    ? <Component value={value} />
-                    : null;
     return (
         <>
             <AppBanner/>
-            {spinner}
-            {errorMsg}
             <CSSTransition 
                 in={inProp}
                 classNames="single-custom" 
                 timeout={300}
                 >
                     <>
-                        {content}
+                        {getContent(process, Component, value, true)}
                     </>
             </CSSTransition>
         </>

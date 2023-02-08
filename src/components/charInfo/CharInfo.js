@@ -5,16 +5,13 @@ import { CSSTransition} from "react-transition-group";
 
 import './charInfo.scss';
 import useMarvelService from '../../services/MarvelService';
-import Spinner from '../spinner/Spinner';
-import ErrorMessage from '../error/ErrorMessage';
-import Skeleton from "../skeleton/Skeleton";
-// import AnimateAppearing from '../animateApearing/AnimateAppearing';
+import setContent from '../../utils/getContent';
 
 const CharInfo = (props) => {
     
     const [char, setChar] = useState(null);
-    const [inProp, setInProp] = useState(false);
-    const {loading, error, getCharacter, clearError} = useMarvelService();
+    const [inProp, setInProp] = useState(true);
+    const {process, setProcess, getCharacter, clearError} = useMarvelService();
 
     const onUpdate = (id) => {
         if(!id) return;
@@ -22,8 +19,10 @@ const CharInfo = (props) => {
 
         clearError();
         getCharacter(id)
-            .then(onCharLoaded);
+            .then(onCharLoaded)
+            .then(() => setProcess('confirmed'));
     }
+    
     const onCharLoaded = (char) => {
         setChar(() => char);
         setInProp(true);
@@ -35,37 +34,29 @@ const CharInfo = (props) => {
 
     }, [props.selectedChar]);
 
-    // console.log(inProp);
-
-    
-    const skeleton = char || loading || error ? null : <Skeleton/>;
-    const spinner = loading ? <Spinner/> : null;
-    const errorMessage = error ? <ErrorMessage/> : null;
-    const content = !(error || loading || !char)
-        ? <View selectedChar={char}/>
-        : null;
- 
+    // const content = setContent(process, View, char);
     return (
         
             <div className="char__info">
-                {skeleton}
+                {/* {skeleton}
                 {spinner}
                 {errorMessage} 
+                 */}
                 <CSSTransition 
                     in={inProp}
                     classNames="char" 
                     timeout={300}
                     unmountOnExit
                     >
-                        <>{content}</>
+                        <>{setContent(process, View, char)}</>
                 </CSSTransition>
                 
             </div>
     )
 }
 
-const View = ({selectedChar}) => {
-    const {name, description, thumbnail, comics, wiki, homepage} = selectedChar;
+const View = ({data}) => {
+    const {name, description, thumbnail, comics, wiki, id} = data;
    
 
     return (
@@ -83,7 +74,7 @@ const View = ({selectedChar}) => {
                         <div>
                             <div className="char__info-name">{name}</div>
                             <div className="char__btns">
-                                <a href={homepage} className="button button__main">
+                                <a href={`/characters/${id}`} className="button button__main">
                                     <div className="inner">homepage</div>
                                 </a>
                                 <a href={wiki} className="button button__secondary">
@@ -116,7 +107,7 @@ const View = ({selectedChar}) => {
 }
 
 CharInfo.propTypes = {
-    selectedChar: PropTypes.number.isRequired,
+    selectedChar: PropTypes.number,
 }
 
 export default CharInfo;

@@ -1,7 +1,7 @@
 import {useHttp} from '../hooks/http.hook';
 
 const useMarvelService = () => {
-    const {loading, error, request, clearError} = useHttp();
+    const {process, setProcess, request, clearError} = useHttp();
 
     const _apiBase = 'https://gateway.marvel.com:443/v1/public/';
     const _apiKey = 'apikey=5e71aeefead0f81920c8d6dc52f22ff5';
@@ -12,19 +12,19 @@ const useMarvelService = () => {
         return res.data.results.map(_transformChar);
     }
 
-    const getSomeCharacters = async (limit, offset = _offset) => {
-        let res = await request(`${_apiBase}characters?limit=${limit}&offset=${offset}&${_apiKey}`);
-        return res.data.results.map(item => ({
-                id: item.id,
-                name: item.name,
-                description: item.description,
-                comics: item.comics.items,
-                thumbnail: item.thumbnail.path + '.' + item.thumbnail.extension,
-                homepage: item.urls[0].url,
-                wiki: item.urls[1].url
-            })
-        );
-    }
+    // const getSomeCharacters = async (limit, offset = _offset) => {
+    //     let res = await request(`${_apiBase}characters?limit=${limit}&offset=${offset}&${_apiKey}`);
+    //     return res.data.results.map(item => ({
+    //             id: item.id,
+    //             name: item.name,
+    //             description: item.description,
+    //             comics: item.comics.items,
+    //             thumbnail: item.thumbnail.path + '.' + item.thumbnail.extension,
+    //             homepage: item.urls[0].url,
+    //             wiki: item.urls[1].url
+    //         })
+    //     );
+    // }
 
     const getCharacter = async (id) => {
         let res = await request(`${_apiBase}characters/${id}?${_apiKey}`);
@@ -72,16 +72,16 @@ const useMarvelService = () => {
         }
     }
 
-    const _transformSearchChar = (res) => {
-        return {
-            id: res.id,
-            name: res.name,
-            description: res.description
-        }
-    }
-
     return {
-        error, loading, getCharacter, getSomeCharacters, getAllCharacters, getCharacterByName, clearError, getAllComics, getComic
+        process, 
+        setProcess, 
+        getCharacter, 
+        // getSomeCharacters, 
+        getAllCharacters, 
+        getCharacterByName, 
+        clearError, 
+        getAllComics, 
+        getComic
     }
 }
 
