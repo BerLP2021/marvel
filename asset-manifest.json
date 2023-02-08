@@ -1,0 +1,33 @@
+{
+  "files": {
+    "main.css": "/marvel/static/css/main.d86d83d8.css",
+    "main.js": "/marvel/static/js/main.aedcc1cc.js",
+    "static/css/748.8d231d42.chunk.css": "/marvel/static/css/748.8d231d42.chunk.css",
+    "static/js/748.b31dabb6.chunk.js": "/marvel/static/js/748.b31dabb6.chunk.js",
+    "static/js/439.c7b40640.chunk.js": "/marvel/static/js/439.c7b40640.chunk.js",
+    "static/css/64.c9a7e247.chunk.css": "/marvel/static/css/64.c9a7e247.chunk.css",
+    "static/js/64.7b2e8a84.chunk.js": "/marvel/static/js/64.7b2e8a84.chunk.js",
+    "static/css/901.f41955e1.chunk.css": "/marvel/static/css/901.f41955e1.chunk.css",
+    "static/js/901.ebd4c3c9.chunk.js": "/marvel/static/js/901.ebd4c3c9.chunk.js",
+    "static/media/vision.png": "/marvel/static/media/vision.067d4ae1936d64a577ce.png",
+    "static/media/arrow.png": "/marvel/static/media/arrow.e634dcee403177c8fccd.png",
+    "static/media/mjolnir.png": "/marvel/static/media/mjolnir.61f31e1809f12183a524.png",
+    "static/media/Avengers.png": "/marvel/static/media/Avengers.4065c8f9c94e3d8b039a.png",
+    "static/media/error.gif": "/marvel/static/media/error.42292aa12b6bc303ce99.gif",
+    "static/media/Avengers_logo.png": "/marvel/static/media/Avengers_logo.9eaf219344d83362e830.png",
+    "index.html": "/marvel/index.html",
+    "main.d86d83d8.css.map": "/marvel/static/css/main.d86d83d8.css.map",
+    "main.aedcc1cc.js.map": "/marvel/static/js/main.aedcc1cc.js.map",
+    "748.8d231d42.chunk.css.map": "/marvel/static/css/748.8d231d42.chunk.css.map",
+    "748.b31dabb6.chunk.js.map": "/marvel/static/js/748.b31dabb6.chunk.js.map",
+    "439.c7b40640.chunk.js.map": "/marvel/static/js/439.c7b40640.chunk.js.map",
+    "64.c9a7e247.chunk.css.map": "/marvel/static/css/64.c9a7e247.chunk.css.map",
+    "64.7b2e8a84.chunk.js.map": "/marvel/static/js/64.7b2e8a84.chunk.js.map",
+    "901.f41955e1.chunk.css.map": "/marvel/static/css/901.f41955e1.chunk.css.map",
+    "901.ebd4c3c9.chunk.js.map": "/marvel/static/js/901.ebd4c3c9.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.d86d83d8.css",
+    "static/js/main.aedcc1cc.js"
+  ]
+}
